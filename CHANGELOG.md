@@ -64,7 +64,7 @@ Optimizaciones para soportar alto volumen de llamadas (cientos concurrentes) y c
 - 🔄 Habilitación de HTTP/HTTPS API
 
 #### README
-- 🔄 Versión de Asterisk actualizada: 22.4.0
+- 🔄 Versión de Asterisk revertida a: 20.9.2 (compatibilidad con producción)
 - 🔄 RTP port range actualizado: 10000-20000
 - 🔄 Timezone actualizado: UTC
 - 🔄 Documentación expandida con secciones detalladas

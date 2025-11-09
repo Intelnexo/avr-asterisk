@@ -1,6 +1,6 @@
 FROM ubuntu:22.04 AS builder
 
-ENV AST_VERSION=22.4.0
+ENV AST_VERSION=20.9.2
 
 RUN set -ex; \
     apt-get update; \

@@ -1,10 +1,10 @@
 # AVR Asterisk Docker Image
 
-This is a lightweight Asterisk 22.4.0 Docker image optimized for VoIP applications. The image is based on Ubuntu 22.04 and includes only essential modules and features, making it ideal for production environments with minimal resource requirements.
+This is a lightweight Asterisk 20.9.2 Docker image optimized for VoIP applications. The image is based on Ubuntu 22.04 and includes only essential modules and features, making it ideal for production environments with minimal resource requirements.
 
 ## Features
 
-- **Asterisk 22.4.0** - Latest stable version compiled from source
+- **Asterisk 20.9.2** - Stable version compiled from source
 - **PJSIP support** - Full PJSIP stack for modern SIP communication
 - **AudioSocket** - Channel driver for real-time audio streaming integration
 - **Manager API (AMI)** - Enabled on port 5038 for call control

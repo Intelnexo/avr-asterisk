@@ -15,10 +15,10 @@ Este documento mantiene el contexto completo del proyecto `avr-asterisk` para fa
 ## Resumen del Proyecto
 
 ### Descripción
-`avr-asterisk` es un contenedor Docker optimizado de Asterisk 22.4.0 diseñado para soportar cientos de llamadas concurrentes en un entorno multi-tenant SaaS.
+`avr-asterisk` es un contenedor Docker optimizado de Asterisk 20.9.2 diseñado para soportar cientos de llamadas concurrentes en un entorno multi-tenant SaaS.
 
 ### Características Principales
-- **Asterisk 22.4.0** con módulos optimizados
+- **Asterisk 20.9.2** con módulos optimizados
 - **PJSIP** para manejo moderno de SIP
 - **WebRTC** soportado vía WebSocket Secure (WSS)
 - **Multi-tenant** mediante archivos de configuración separados por tenant
@@ -80,7 +80,7 @@ Este documento mantiene el contexto completo del proyecto `avr-asterisk` para fa
    - Creado directorio `/etc/asterisk/tenants` para multi-tenancy
 
 3. **README.md:**
-   - Actualizado con versión correcta (22.4.0)
+   - Versión revertida a 20.9.2 (compatibilidad con producción)
    - Corregidos RTP ports (10000-20000)
    - Corregido timezone (UTC)
    - Agregada sección de performance y escalabilidad

@@ -8,14 +8,14 @@
 
 ## Resumen Ejecutivo
 
-AVR-ASTERISK es un servidor de telefonía IP basado en Asterisk 22.4.0, optimizado para entornos multi-tenant SaaS con soporte para cientos de llamadas concurrentes. Incluye configuraciones optimizadas para alto rendimiento, grabación de llamadas, routing avanzado y integración completa con WebRTC.
+AVR-ASTERISK es un servidor de telefonía IP basado en Asterisk 20.9.2, optimizado para entornos multi-tenant SaaS con soporte para cientos de llamadas concurrentes. Incluye configuraciones optimizadas para alto rendimiento, grabación de llamadas, routing avanzado y integración completa con WebRTC.
 
 ---
 
 ## Features Técnicos Principales
 
-### 1. Asterisk 22.4.0
-- **Versión:** Asterisk 22.4.0 (LTS)
+### 1. Asterisk 20.9.2
+- **Versión:** Asterisk 20.9.2 (LTS)
 - **Stack SIP:** PJSIP (moderno y eficiente)
 - **Protocolos soportados:**
   - SIP (UDP/TCP/TLS)
@@ -261,7 +261,7 @@ contact_expiration_check_interval = 30
 ## Stack Tecnológico
 
 ### Core
-- **Asterisk:** 22.4.0
+- **Asterisk:** 20.9.2
 - **PJSIP:** Incluido en Asterisk
 - **Base OS:** Debian/Ubuntu (Docker)
 
