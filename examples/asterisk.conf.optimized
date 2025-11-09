@@ -1,0 +1,71 @@
+; Asterisk Configuration File - Optimized for High Call Volume
+; This file should be mounted to /etc/asterisk/asterisk.conf
+; or merged with the existing asterisk.conf
+;
+; @author Initial version: AVR (Agent Voice Response)
+; @author Updates: Andrés Zambrano B (andres@ianexo.net)
+
+[options]
+; Maximum CPU load before rejecting new calls (0.0 - 1.0)
+; 0.9 = 90% CPU usage
+maxload = 0.9
+
+; Maximum number of open files
+; Required for high call volume (each call uses file descriptors)
+maxfiles = 65536
+
+; Minimum free memory in MB before rejecting new calls
+; 64 MB minimum free memory
+minmemfree = 64
+
+; Maximum number of concurrent calls
+; Adjust based on your hardware resources
+maxcalls = 1000
+
+; Maximum number of callers
+maxcallers = 1000
+
+; Transmit silence when silence is detected
+transmit_silence = yes
+
+; Transmit silence during hold
+transmit_silence_hold = yes
+
+; Maximum number of open files per process
+; This should match maxfiles
+maxfiles = 65536
+
+; Maximum number of processes
+maxproc = 32768
+
+; Maximum number of threads
+maxthreads = 1000
+
+; Enable core dumps for debugging (disable in production)
+; coredumps = yes
+
+; Run as user (if running as root)
+; runuser = asterisk
+; rungroup = asterisk
+
+; Language for prompts
+languageprefix = yes
+documentation_language = en_US
+
+; Enable verbose logging (adjust level for production)
+; verbose = 3
+; debug = 3
+; alwaysfork = yes
+; noload = chan_iax2.so
+; noload = chan_skinny.so
+; noload = chan_mgcp.so
+; noload = chan_unistim.so
+
+; Security settings
+; hideconnect = yes
+
+; Performance optimizations
+; highpriority = yes
+; realtime = no
+; cache_record_files = yes
+

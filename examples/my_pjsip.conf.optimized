@@ -1,0 +1,59 @@
+; PJSIP Configuration File - Optimized for High Call Volume
+; This file should be mounted to /etc/asterisk/my_pjsip.conf
+; It will be automatically included by the master pjsip.conf
+;
+; @author Initial version: AVR (Agent Voice Response)
+; @author Updates: Andrés Zambrano B (andres@ianexo.net)
+
+[global]
+; User agent string
+user_agent = AVR-Asterisk
+
+; Endpoint identifier order
+; Determines how endpoints are identified
+endpoint_identifier_order = ip,username,anonymous
+
+; Maximum forwards (SIP header)
+; Maximum number of hops a SIP message can take
+max_forwards = 70
+
+; Contact expiration check interval (seconds)
+; How often to check for expired contacts
+contact_expiration_check_interval = 30
+
+; Default outbound endpoint
+; default_outbound_endpoint = default
+
+; Disable unused features for performance
+; disable_tcp_switch = no
+; disable_tcp_keepalive = no
+
+; TCP keepalive settings (for TCP transport)
+; tcp_keepalive_interval = 30
+; tcp_keepalive_timeout = 120
+
+; UDP keepalive settings (for UDP transport)
+; udp_keepalive_interval = 30
+; udp_keepalive_timeout = 120
+
+; TLS settings (if using TLS transport)
+; tls_cert_file = /etc/asterisk/keys/asterisk.crt
+; tls_private_key = /etc/asterisk/keys/asterisk.key
+; tls_ca_file = /etc/asterisk/keys/ca.crt
+; tls_method = tlsv1_2
+; tls_cipher = ALL
+; tls_bind_options = no
+
+; Performance optimizations
+; disable_dns_srv = no
+; dns_srv_lookup = yes
+; dns_srv_failover_timeout = 30
+
+; Logging (adjust for production)
+; log_level = 3
+; log_file = /var/log/asterisk/pjsip.log
+
+; Note: Tenant-specific configurations are automatically included
+; from /etc/asterisk/tenants/{tenant_id}/pjsip.conf
+; Do not add endpoint configurations here - they are managed per tenant
+
