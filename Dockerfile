@@ -70,6 +70,7 @@ RUN set -ex; \
     menuselect/menuselect --disable format_g723 menuselect.makeopts; \
     menuselect/menuselect --disable codec_g729a menuselect.makeopts; \
     menuselect/menuselect --disable format_ogg_vorbis menuselect.makeopts; \
+    menuselect/menuselect --disable format_ogg_speex menuselect.makeopts; \
     menuselect/menuselect --disable res_format_attr_celt menuselect.makeopts; \
     menuselect/menuselect --disable res_format_attr_h263 menuselect.makeopts; \
     menuselect/menuselect --disable res_format_attr_h264 menuselect.makeopts; \
@@ -144,6 +145,7 @@ RUN set -ex; \
     menuselect/menuselect --disable app_alarmreceiver menuselect.makeopts; \
     menuselect/menuselect --disable app_broadcast menuselect.makeopts; \
     menuselect/menuselect --enable  app_amd menuselect.makeopts; \
+    menuselect/menuselect --enable app_mixmonitor menuselect.makeopts; \
     menuselect/menuselect --disable app_test menuselect.makeopts; \
     menuselect/menuselect --disable app_festival menuselect.makeopts; \
     menuselect/menuselect --disable app_disa menuselect.makeopts; \
@@ -208,6 +210,8 @@ RUN set -ex; \
     menuselect/menuselect --enable chan_audiosocket menuselect.makeopts; \
     menuselect/menuselect --enable codec_gsm menuselect.makeopts; \
     menuselect/menuselect --enable format_gsm menuselect.makeopts; \
+    menuselect/menuselect --enable format_wav menuselect.makeopts; \
+    menuselect/menuselect --enable format_mp3 menuselect.makeopts; \
     menuselect/menuselect --enable res_agi menuselect.makeopts; \
     menuselect/menuselect --enable res_prometheus menuselect.makeopts; \
     menuselect/menuselect --enable res_srtp menuselect.makeopts; \
@@ -257,6 +261,8 @@ COPY --from=builder /usr/lib/libasteriskssl.so.1 \
                     /usr/lib/
 
 RUN sed -i 's/enabled = no/enabled = yes/' /etc/asterisk/manager.conf; \
+    sed -i 's/rtpstart=10000/rtpstart=10000/' /etc/asterisk/rtp.conf; \
+    sed -i 's/rtpend=20000/rtpend=10050/' /etc/asterisk/rtp.conf; \
     sed -i 's/; stunaddr=/stunaddr=stun.l.google.com:19302/' /etc/asterisk/rtp.conf; \
     sed -i 's/enabled = no/enabled = yes/' /etc/asterisk/prometheus.conf; \
     sed -i 's/;enabled=yes/enabled=yes/' /etc/asterisk/http.conf; \
@@ -266,11 +272,25 @@ RUN sed -i 's/enabled = no/enabled = yes/' /etc/asterisk/manager.conf; \
     sed -i 's/;tlscertfile=<\/path\/to\/certificate.pem>/tlscertfile=\/etc\/asterisk\/keys\/asterisk.crt/' /etc/asterisk/http.conf; \
     sed -i 's/;tlsprivatekey=<\/path\/to\/private.pem>/tlsprivatekey=\/etc\/asterisk\/keys\/asterisk.key/' /etc/asterisk/http.conf; 
 
+# Add includes for optional global configuration files (my_*.conf)
+# These files are optional and can be mounted from host for custom global configurations
+# Tenant-specific configurations are managed dynamically by avr-ami in /etc/asterisk/tenants/{tenant_id}/
 RUN echo "#include \"my_extensions.conf\"" >> "/etc/asterisk/extensions.conf"; \
     echo "#include \"my_pjsip.conf\"" >> "/etc/asterisk/pjsip.conf"; \
     echo "#include \"my_manager.conf\"" >> "/etc/asterisk/manager.conf"; \
     echo "#include \"my_queues.conf\"" >> "/etc/asterisk/queues.conf"; \
     echo "#include \"my_ari.conf\"" >> "/etc/asterisk/ari.conf";
+
+# Create empty files for optional includes (Asterisk fails if included files don't exist)
+# These empty files allow Asterisk to start without errors
+# If custom my_*.conf files are mounted from host, they will override these empty files
+# Tenant configurations are generated dynamically by avr-ami and included via updateMasterIncludes()
+RUN touch /etc/asterisk/my_extensions.conf && \
+    touch /etc/asterisk/my_pjsip.conf && \
+    touch /etc/asterisk/my_manager.conf && \
+    touch /etc/asterisk/my_queues.conf && \
+    touch /etc/asterisk/my_ari.conf && \
+    chmod 644 /etc/asterisk/my_*.conf
 
 # Create tenants directory for multi-tenant configuration
 RUN mkdir -p /etc/asterisk/tenants && \

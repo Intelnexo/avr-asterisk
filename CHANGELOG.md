@@ -5,6 +5,15 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
+## [1.2.1] - 2025-11-11
+
+### Changed - Modificado
+
+#### Dockerfile
+- 🔄 Rango de puertos RTP ajustado de `10000-20000` a `10000-10050` en `rtp.conf`
+  - Reduce el rango de puertos UDP necesarios para RTP
+  - Mejora compatibilidad con configuraciones de red más restrictivas
+
 ## [1.2.0] - 2025-01-XX
 
 ### Resumen
