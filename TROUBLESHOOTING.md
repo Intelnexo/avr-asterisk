@@ -1,7 +1,7 @@
 # Troubleshooting - AVR-ASTERISK
 
 **Última actualización:** 2025-01-XX  
-**Versión:** 1.2.0
+**Versión:** 1.2.1
 
 ---
 

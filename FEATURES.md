@@ -1,7 +1,7 @@
 # Features Técnicos - AVR-ASTERISK
 
 **Última actualización:** 2025-01-XX  
-**Versión:** 1.2.0  
+**Versión:** 1.2.1  
 **Mantenido por:** Andrés Zambrano B (andres@ianexo.net)
 
 ---

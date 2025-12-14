@@ -211,10 +211,11 @@ RUN set -ex; \
     menuselect/menuselect --enable codec_gsm menuselect.makeopts; \
     menuselect/menuselect --enable format_gsm menuselect.makeopts; \
     menuselect/menuselect --enable format_wav menuselect.makeopts; \
-    menuselect/menuselect --enable format_mp3 menuselect.makeopts; \
+    menuselect/menuselect --disable format_mp3 menuselect.makeopts; \
     menuselect/menuselect --enable res_agi menuselect.makeopts; \
     menuselect/menuselect --enable res_prometheus menuselect.makeopts; \
     menuselect/menuselect --enable res_srtp menuselect.makeopts; \
+    menuselect/menuselect --enable res_musiconhold menuselect.makeopts; \
     make -j$(grep -c ^processor /proc/cpuinfo); \
     make install; \
     make samples; \
@@ -261,8 +262,8 @@ COPY --from=builder /usr/lib/libasteriskssl.so.1 \
                     /usr/lib/
 
 RUN sed -i 's/enabled = no/enabled = yes/' /etc/asterisk/manager.conf; \
-    sed -i 's/rtpstart=10000/rtpstart=10000/' /etc/asterisk/rtp.conf; \
-    sed -i 's/rtpend=20000/rtpend=10050/' /etc/asterisk/rtp.conf; \
+    sed -i 's/rtpstart=.*/rtpstart=10000/' /etc/asterisk/rtp.conf; \
+    sed -i 's/rtpend=.*/rtpend=10200/' /etc/asterisk/rtp.conf; \
     sed -i 's/; stunaddr=/stunaddr=stun.l.google.com:19302/' /etc/asterisk/rtp.conf; \
     sed -i 's/enabled = no/enabled = yes/' /etc/asterisk/prometheus.conf; \
     sed -i 's/;enabled=yes/enabled=yes/' /etc/asterisk/http.conf; \
