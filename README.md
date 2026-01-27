@@ -125,6 +125,7 @@ context=from-internal
 disallow=all
 allow=ulaw
 allow=alaw
+allow=speex
 auth=6001
 aors=6001
 

@@ -1,6 +1,6 @@
 services:
   avr-asterisk:
-    image: intelnexoec/avr-asterisk:develop
+    image: intelnexoec/avr-asterisk:latest
     container_name: avr-asterisk
     restart: always
     ports:
@@ -11,5 +11,6 @@ services:
       - 10000-10050:10000-10050/udp
     volumes:
       - ./asterisk/conf:/etc/asterisk:rw
+      - ../avr-app-main/data/recordings:/var/spool/asterisk/monitor:rw
     networks:
       - avr

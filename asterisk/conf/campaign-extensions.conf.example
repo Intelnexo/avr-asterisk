@@ -1,0 +1,130 @@
+; =============================================================================
+; Campaign Outbound Context for AVR
+; =============================================================================
+; This context handles outbound campaign calls originated by avr-campaign-worker.
+; When a call is answered, it connects to avr-pipecat via AudioSocket for IVR.
+;
+; Channel variables set by campaign worker:
+;   CAMPAIGN_ID - Campaign UUID
+;   CONTACT_ID - Contact UUID
+;   IVR_MESSAGE - Initial TTS message
+;   TRANSFER_DESTINATION - Extension/queue to transfer to
+;   TRANSFER_KEYWORDS - Comma-separated keywords that trigger transfer
+;   TRANSFER_MESSAGE - Message before transfer
+;   GOODBYE_MESSAGE - Goodbye message
+;   RESPONSE_TIMEOUT - Seconds to wait for response
+;   CAMPAIGN_MODE - Set to 'ivr' for campaign mode
+;   AGENT_ID - Agent ID for avr-pipecat
+;
+; Usage:
+;   Originate call with context=campaign-outbound, exten=s, priority=1
+; =============================================================================
+
+[campaign-outbound]
+; Entry point for campaign calls
+exten => s,1,NoOp(=== Campaign Outbound Call ===)
+ same => n,NoOp(Campaign ID: ${CAMPAIGN_ID})
+ same => n,NoOp(Contact ID: ${CONTACT_ID})
+ same => n,NoOp(Caller ID: ${CALLERID(all)})
+ same => n,Set(CHANNEL(language)=es)
+ same => n,Set(TIMEOUT(absolute)=300)
+ same => n,Answer()
+ same => n,Wait(0.5)
+ ; AMD (Answering Machine Detection) - optional
+ same => n,GotoIf($["${ENABLE_AMD}" != "true"]?skip_amd)
+ same => n,AMD()
+ same => n,NoOp(AMD Status: ${AMDSTATUS}, Cause: ${AMDCAUSE})
+ same => n,GotoIf($["${AMDSTATUS}" = "MACHINE"]?machine_detected)
+ same => n(skip_amd),NoOp(Proceeding to IVR)
+ ; Connect to avr-pipecat via AudioSocket
+ ; The pipecat host should be configured via environment or hardcoded
+ same => n,Set(PIPECAT_HOST=${IF($["${PIPECAT_HOST}" != ""]?${PIPECAT_HOST}:avr-pipecat)})
+ same => n,Set(PIPECAT_PORT=${IF($["${PIPECAT_PORT}" != ""]?${PIPECAT_PORT}:5000)})
+ same => n,NoOp(Connecting to AudioSocket: ${PIPECAT_HOST}:${PIPECAT_PORT})
+ same => n,AudioSocket(${PIPECAT_HOST}:${PIPECAT_PORT})
+ same => n,NoOp(AudioSocket returned, call ended)
+ same => n,Hangup()
+
+; Machine detected - handle based on AMD_ACTION
+exten => s,n(machine_detected),NoOp(Answering machine detected)
+ same => n,GotoIf($["${AMD_ACTION}" = "leave_message"]?leave_voicemail)
+ same => n,GotoIf($["${AMD_ACTION}" = "transfer"]?transfer_machine)
+ ; Default: hangup
+ same => n,Hangup()
+
+; Leave voicemail message
+exten => s,n(leave_voicemail),NoOp(Leaving voicemail message)
+ same => n,Wait(2)
+ ; Connect to pipecat to play voicemail message
+ same => n,Set(CAMPAIGN_MODE=voicemail)
+ same => n,AudioSocket(${PIPECAT_HOST}:${PIPECAT_PORT})
+ same => n,Hangup()
+
+; Transfer machine call (rare use case)
+exten => s,n(transfer_machine),NoOp(Transferring machine call)
+ same => n,Goto(${TRANSFER_DESTINATION},s,1)
+
+; Handle transfer request from pipecat
+; When pipecat detects transfer keywords, it sets TRANSFER_REQUESTED=1
+; and returns from AudioSocket
+exten => transfer,1,NoOp(=== Transfer Requested ===)
+ same => n,NoOp(Transfer to: ${TRANSFER_DESTINATION})
+ same => n,GotoIf($["${TRANSFER_DESTINATION}" = ""]?no_destination)
+ ; Check if destination is a queue
+ same => n,GotoIf($["${TRANSFER_DESTINATION:0:6}" = "queue:"]?transfer_queue)
+ ; Check if destination is an extension
+ same => n,GotoIf($["${TRANSFER_DESTINATION:0:4}" = "ext:"]?transfer_ext)
+ ; Default: try as extension in default context
+ same => n,Dial(PJSIP/${TRANSFER_DESTINATION},30,tT)
+ same => n,Hangup()
+
+exten => transfer,n(transfer_queue),NoOp(Transferring to queue)
+ same => n,Set(QUEUE_NAME=${TRANSFER_DESTINATION:6})
+ same => n,Queue(${QUEUE_NAME},tT,,,300)
+ same => n,Hangup()
+
+exten => transfer,n(transfer_ext),NoOp(Transferring to extension)
+ same => n,Set(EXT_NUM=${TRANSFER_DESTINATION:4})
+ same => n,Dial(PJSIP/${EXT_NUM},30,tT)
+ same => n,Hangup()
+
+exten => transfer,n(no_destination),NoOp(No transfer destination configured)
+ same => n,Hangup()
+
+; Hangup handler
+exten => h,1,NoOp(=== Campaign Call Ended ===)
+ same => n,NoOp(Hangup cause: ${HANGUPCAUSE})
+ same => n,NoOp(Duration: ${CDR(duration)} seconds)
+ same => n,NoOp(Billsec: ${CDR(billsec)} seconds)
+
+
+; =============================================================================
+; Preview/Progressive Dialer Context
+; =============================================================================
+; For campaigns that transfer directly to an agent without IVR
+; Used when campaign type is 'preview' or 'progressive'
+
+[campaign-direct]
+exten => s,1,NoOp(=== Campaign Direct Transfer ===)
+ same => n,NoOp(Campaign ID: ${CAMPAIGN_ID})
+ same => n,NoOp(Contact ID: ${CONTACT_ID})
+ same => n,Set(CHANNEL(language)=es)
+ same => n,Answer()
+ same => n,Wait(0.5)
+ ; Transfer directly to destination
+ same => n,GotoIf($["${TRANSFER_DESTINATION}" = ""]?no_destination)
+ same => n,GotoIf($["${TRANSFER_DESTINATION:0:6}" = "queue:"]?transfer_queue)
+ same => n,Dial(PJSIP/${TRANSFER_DESTINATION},30,tT)
+ same => n,Hangup()
+
+exten => s,n(transfer_queue),NoOp(Transferring to queue)
+ same => n,Set(QUEUE_NAME=${TRANSFER_DESTINATION:6})
+ same => n,Queue(${QUEUE_NAME},tT,,,300)
+ same => n,Hangup()
+
+exten => s,n(no_destination),NoOp(No transfer destination)
+ same => n,Playback(tt-somethingwrong)
+ same => n,Hangup()
+
+exten => h,1,NoOp(=== Direct Call Ended ===)
+ same => n,NoOp(Hangup cause: ${HANGUPCAUSE})

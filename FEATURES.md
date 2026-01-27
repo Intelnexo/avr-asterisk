@@ -24,6 +24,7 @@ AVR-ASTERISK es un servidor de telefonía IP basado en Asterisk 20.9.2, optimiza
 - **Codecs de audio:**
   - Opus (recomendado para WebRTC)
   - G.711 (ulaw/alaw)
+  - Speex (codec de voz de código abierto, mejor compresión que G.711)
   - G.722
   - G.729 (requiere licencia)
 

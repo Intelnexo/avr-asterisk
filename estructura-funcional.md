@@ -115,7 +115,7 @@
 #### 7. **res_rtp_asterisk.so** - RTP Engine
 - **Propósito:** Manejo de media RTP
 - **Puertos:** 10000-20000 (UDP)
-- **Codecs:** ulaw, alaw, gsm, opus
+- **Codecs:** ulaw, alaw, speex, opus
 
 #### 8. **chan_audiosocket.so** - AudioSocket Channel Driver
 - **Propósito:** Streaming de audio en tiempo real

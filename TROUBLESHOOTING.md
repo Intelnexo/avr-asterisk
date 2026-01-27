@@ -150,7 +150,7 @@ pjsip show endpoint tenant-{tenant_id}-ext-{number}
 1. **Codecs no coinciden:**
    ```bash
    # Verificar que codecs están configurados en ambos endpoints
-   # Deben tener al menos un codec común (ulaw, alaw, opus)
+   # Deben tener al menos un codec común (ulaw, alaw, speex, opus)
    ```
 
 2. **RTP bloqueado:**

@@ -57,13 +57,14 @@ RUN set -ex; \
     menuselect/menuselect --disable func_db menuselect.makeopts; \
     menuselect/menuselect --disable pbx_realtime menuselect.makeopts; \
     echo ">>DISABLE unused codec"; \
+    menuselect/menuselect --enable codec_opus menuselect.makeopts; \
+    menuselect/menuselect --enable codec_g722 menuselect.makeopts; \
     menuselect/menuselect --disable codec_g726 menuselect.makeopts; \
-    menuselect/menuselect --disable codec_g722 menuselect.makeopts; \
     menuselect/menuselect --disable codec_adpcm menuselect.makeopts; \
     menuselect/menuselect --disable codec_a_mu menuselect.makeopts; \
     menuselect/menuselect --disable codec_ilbc menuselect.makeopts; \
     menuselect/menuselect --disable codec_lpc10 menuselect.makeopts; \
-    menuselect/menuselect --disable codec_speex menuselect.makeopts; \
+    menuselect/menuselect --enable codec_speex menuselect.makeopts; \
     menuselect/menuselect --disable format_h264 menuselect.makeopts; \
     menuselect/menuselect --disable format_h263 menuselect.makeopts; \
     menuselect/menuselect --disable format_g726 menuselect.makeopts; \
@@ -116,7 +117,7 @@ RUN set -ex; \
     menuselect/menuselect --disable pbx_loopback menuselect.makeopts; \
     menuselect/menuselect --disable pbx_dundi menuselect.makeopts; \
     menuselect/menuselect --disable func_env menuselect.makeopts; \
-    menuselect/menuselect --disable func_speex menuselect.makeopts; \
+    menuselect/menuselect --enable func_speex menuselect.makeopts; \
     menuselect/menuselect --disable func_srv menuselect.makeopts; \
     menuselect/menuselect --disable func_groupcount menuselect.makeopts; \
     menuselect/menuselect --disable func_holdintercept menuselect.makeopts; \
